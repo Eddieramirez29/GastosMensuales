@@ -1,0 +1,38 @@
+#calcularTotalsButton
+{
+    margin-top: 20px;
+    background-color: rgb(255, 255, 255);
+    color: rgb(12, 12, 12);
+    border: none;
+    border: 1px solid rgb(97, 97, 226);
+    height: 50px;
+    border-radius: 5px;
+}
+
+#calcularTotalsButton:hover
+{
+    background-color: rgb(97, 97, 226);
+    color: rgb(0, 0, 0);
+    border: none;
+    border: 1px solid rgb(255, 255, 255);
+}
+
+.containerResumen
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: 10px;
+    border: 1px solid black;
+    width: 500px;
+    border-radius: 10px;
+    background-color: rgb(88, 88, 202);
+}
+
+.containerResumen >*
+{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    color: white;
+}
