@@ -34,12 +34,22 @@ function FormularioGasto({ gastos, setGastos })
       categoria : categoria
     };
 
-    setGastos([...gastos, nuevoGasto]);
+    if(nuevoGasto.nombre === "" )
+    {
+      alert("Agrega nombre del gasto");
+    }
+    else if(isNaN(nuevoGasto.monto) || montoActual.trim() === "")
+    {
+      alert("Agrega la cantidad del gasto");
+    }
+    else
+    {
+      setGastos([...gastos, nuevoGasto]);
 
-    // Limpiar campos
-    setGastoActual("");
-    setMontoActual("");
-    //setCategoria("Comida");
+      // Limpiar campos
+      setGastoActual("");
+      setMontoActual("");
+    }
   };
 
   return (
