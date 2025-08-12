@@ -9,9 +9,8 @@ function App() {
 
   return (
     <>
-      <FormularioGasto gastos={gastos} setGastos={setGastos} />
-
       <Resumen gastos={gastos} />
+      <FormularioGasto gastos={gastos} setGastos={setGastos} />
 
       {gastos.length === 0 ? (
         <p>No hay datos en la lista</p>

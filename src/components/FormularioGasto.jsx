@@ -67,7 +67,7 @@ function FormularioGasto({ gastos, setGastos })
             <option value="Otros">Otros</option>
           </select>
         </div>
-        <button type="submit">Agregar</button>
+        <button id="buttonAdd" type="submit">Agregar</button>
       </form>
     </>
   );
