@@ -3,6 +3,11 @@ body
     background-color: black;
 }
 
+label
+{
+    color:white;
+}
+
 #formulario
 {
     display: flex;
