@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FaBus, FaEllipsisH, FaFilm, FaMoneyBillWave, FaUtensils } from "react-icons/fa";
 import "../styles/Resume.css";
 
 function Resumen({ gastos }) {
@@ -20,7 +21,7 @@ function Resumen({ gastos }) {
     } 
     else 
     {
-      const acumTotal = gastos.reduce((suma, valor) => {
+      const acumTotal =  gastos.reduce((suma, valor) => {
         return suma + Number(valor.monto);
       }, 0);
 
@@ -49,7 +50,6 @@ function Resumen({ gastos }) {
         return suma + Number(valor.monto);
       }, 0);
 
-      
       const acumTotalEntretenimiento = gastosEntretenimientoFiltrados.reduce(
         (suma, valor) => {
           return suma + Number(valor.monto);
@@ -57,17 +57,14 @@ function Resumen({ gastos }) {
         0
       );
 
-      
       const acumTotalTransporte = gastosTransporteFiltrados.reduce(
         (suma, valor) => {
           return suma + Number(valor.monto);
         }, 0);
 
-      
       const acumTotalOtros = gastosOtrosFiltrados.reduce((suma, valor) => {
         return suma + Number(valor.monto);
       }, 0);
-
 
       setTotalGastos(acumTotal);
       setTotalComidaMonto(acumTotalComida);     
@@ -77,15 +74,14 @@ function Resumen({ gastos }) {
     }
   };
 
-
   return (
     <>
       <div className="containerResumen">
-        <p>Total: {totalGastos}</p>
-        <p>Total Comida: {totalComidaMonto}</p>
-        <p>Total Entretenimiento: {totalEntretenimientoMonto}</p>
-        <p>Total Transporte: {totalTransporteMonto}</p>
-        <p>Total Otros: {totalOtrosMonto}</p>
+        <p><FaMoneyBillWave style={{ color: "#28a745" }} /> Total: $ {totalGastos}</p>
+        <p><FaUtensils style={{ color: "#ff6347" }} /> Total Comida: $ {totalComidaMonto}</p>
+        <p><FaFilm style={{ color: "#ffa500" }} /> Total Entretenimiento: $ {totalEntretenimientoMonto}</p>
+        <p><FaBus style={{ color: "#007bff" }} /> Total Transporte: $ {totalTransporteMonto}</p>
+        <p><FaEllipsisH style={{ color: "#6c757d" }} /> Total Otros: $ {totalOtrosMonto}</p>
         <button id="calcularTotalsButton" onClick={mostrarTotal}>Calcular</button>
       </div>
     </>
