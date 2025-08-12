@@ -1,54 +1,45 @@
 import { useState } from "react";
 import "../styles/Formulario.css";
 
-function FormularioGasto({ gastos, setGastos }) 
-{
+function FormularioGasto({ gastos, setGastos }) {
   const [gastoActual, setGastoActual] = useState("");
   const [montoActual, setMontoActual] = useState("");
   const [categoria, setCategoria] = useState("Comida");
+  const [mensajeError, setMensajeError] = useState(""); // 🔹 Nuevo estado para mensaje
 
-  const manejarOpcion = (e) => 
-  {
+  const manejarOpcion = (e) => {
     setCategoria(e.target.value);
   };
 
-  const manejarGasto = (e) => 
-  {
+  const manejarGasto = (e) => {
     setGastoActual(e.target.value);
   };
 
-  const manejarMonto = (e) => 
-  {
+  const manejarMonto = (e) => {
     setMontoActual(e.target.value);
   };
 
-  const manejarFormulario = (e) => 
-  {
+  const manejarFormulario = (e) => {
     e.preventDefault();
 
-    const nuevoGasto = 
-    {
+    const nuevoGasto = {
       id: Date.now(),
       nombre: gastoActual,
       monto: parseFloat(montoActual),
-      categoria : categoria
+      categoria: categoria
     };
 
-    if(nuevoGasto.nombre === "" )
-    {
-      alert("Agrega nombre del gasto");
-    }
-    else if(isNaN(nuevoGasto.monto) || montoActual.trim() === "")
-    {
-      alert("Agrega la cantidad del gasto");
-    }
-    else
-    {
+    if (nuevoGasto.nombre === "") {
+      setMensajeError("Agrega nombre del gasto");
+    } 
+    else if (isNaN(nuevoGasto.monto) || montoActual.trim() === "") {
+      setMensajeError("Agrega la cantidad del gasto");
+    } 
+    else {
       setGastos([...gastos, nuevoGasto]);
-
-      // Limpiar campos
       setGastoActual("");
       setMontoActual("");
+      setMensajeError(""); // 🔹 Limpia el mensaje
     }
   };
 
@@ -56,6 +47,10 @@ function FormularioGasto({ gastos, setGastos })
     <>
       <form id="formulario" onSubmit={manejarFormulario}>
         <label htmlFor="">Información sobre los gastos</label>
+
+        {/* 🔹 Mensaje visual */}
+        {mensajeError && <p className="mensaje-error">{mensajeError}</p>}
+
         <input
           type="text"
           value={gastoActual}
@@ -66,7 +61,7 @@ function FormularioGasto({ gastos, setGastos })
           type="text"
           value={montoActual}
           onChange={manejarMonto}
-          placeholder="Ingresa el monto"
+          placeholder="Ingresa el monto $"
         />
         <div id="categoria">
           <label>Categoria:</label>
