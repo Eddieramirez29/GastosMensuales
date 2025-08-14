@@ -19,29 +19,50 @@ function FormularioGasto({ gastos, setGastos }) {
     setMontoActual(e.target.value);
   };
 
-  const manejarFormulario = (e) => {
-    e.preventDefault();
+  const manejarFormulario = async (e) => {
+  e.preventDefault();
 
-    const nuevoGasto = {
-      id: Date.now(),
-      nombre: gastoActual,
-      monto: parseFloat(montoActual),
-      categoria: categoria
-    };
-
-    if (nuevoGasto.nombre === "") {
-      setMensajeError("Agrega nombre del gasto");
-    } 
-    else if (isNaN(nuevoGasto.monto) || montoActual.trim() === "") {
-      setMensajeError("Agrega la cantidad del gasto");
-    } 
-    else {
-      setGastos([...gastos, nuevoGasto]);
-      setGastoActual("");
-      setMontoActual("");
-      setMensajeError(""); // 🔹 Limpia el mensaje
-    }
+  const nuevoGasto = {
+    nombre: gastoActual,
+    monto: parseFloat(montoActual),
+    categoria: categoria
   };
+
+  if (nuevoGasto.nombre === "") {
+    setMensajeError("Agrega nombre del gasto");
+    return;
+  } 
+  if (isNaN(nuevoGasto.monto) || montoActual.trim() === "") {
+    setMensajeError("Agrega la cantidad del gasto");
+    return;
+  }
+
+  try {
+    // 🔹 POST al backend
+    const response = await fetch("http://localhost:8080/api/gastos", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(nuevoGasto)
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al guardar el gasto en la base de datos");
+    }
+
+    const gastoGuardado = await response.json();
+
+    // 🔹 Actualiza el estado local con el objeto que devuelve el backend
+    setGastos([...gastos, gastoGuardado]);
+
+    // 🔹 Limpia los inputs y mensajes
+    setGastoActual("");
+    setMontoActual("");
+    setMensajeError("");
+  } catch (error) {
+    setMensajeError(error.message);
+  }
+};
+
 
   return (
     <>
