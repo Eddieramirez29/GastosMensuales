@@ -25,4 +25,18 @@ ul >*
 button
 {
     margin-left: 25px;
+    border: none;
+    border-radius: 5px;
+    width: 80px;
+    height: 25px;
+}
+
+.editarBoton:hover
+{
+    background-color: bisque;
+}
+
+.eliminarBoton:hover
+{
+    background-color: rgb(244, 84, 84);
 }

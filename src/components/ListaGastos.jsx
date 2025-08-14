@@ -9,8 +9,8 @@ function ListaGastos({ gastos }) {
             {gasto.nombre || "Sin nombre"} - ${gasto.monto || 0} ({gasto.categoria || "Sin categoría"})
           </span>
           <div className="botones">
-            <button id={`editar-${gasto.id}`}>Editar</button>
-            <button id={`eliminar-${gasto.id}`}>Eliminar</button>
+            <button className="editarBoton" id={`editar-${gasto.id}`}>Editar</button>
+            <button className="eliminarBoton" id={`eliminar-${gasto.id}`}>Eliminar</button>
           </div>
         </li>
       ))}
