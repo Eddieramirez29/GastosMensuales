@@ -15,7 +15,7 @@ function App() {
       {gastos.length === 0 ? (
         <p>No hay datos en la lista</p>
       ) : (
-        <ListaGastos gastos={gastos} />
+        <ListaGastos gastos={gastos} setGastos={setGastos}/>
       )}
     </>
   );
