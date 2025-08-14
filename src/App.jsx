@@ -9,7 +9,7 @@ function App() {
 
   return (
     <>
-      <Resumen gastos={gastos} />
+      <Resumen gastos={gastos} setGastos={setGastos} />
       <FormularioGasto gastos={gastos} setGastos={setGastos} />
 
       {gastos.length === 0 ? (

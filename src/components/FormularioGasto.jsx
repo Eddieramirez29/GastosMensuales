@@ -1,33 +1,62 @@
 import { useState } from "react";
+import "../styles/Formulario.css";
 
-function FormularioGasto({ setGastos }) {
-  const [nombre, setNombre] = useState("");
-  const [monto, setMonto] = useState("");
+function FormularioGasto({ gastos, setGastos }) {
+  const [gastoActual, setGastoActual] = useState("");
+  const [montoActual, setMontoActual] = useState("");
   const [categoria, setCategoria] = useState("Comida");
-  const [mensajeError, setMensajeError] = useState("");
+  const [mensajeError, setMensajeError] = useState(""); // 🔹 Nuevo estado para mensaje
+
+  const manejarOpcion = (e) => {
+    setCategoria(e.target.value);
+  };
+
+  const manejarGasto = (e) => {
+    setGastoActual(e.target.value);
+  };
+
+  const manejarMonto = (e) => {
+    setMontoActual(e.target.value);
+  };
 
   const manejarFormulario = async (e) => {
     e.preventDefault();
 
-    if (!nombre) return setMensajeError("Agrega nombre del gasto");
-    if (!monto || isNaN(parseFloat(monto))) return setMensajeError("Agrega la cantidad del gasto");
+    const nuevoGasto = {
+      nombre: gastoActual,
+      monto: parseFloat(montoActual),
+      categoria: categoria
+    };
 
-    const nuevoGasto = { nombre, monto: parseFloat(monto), categoria };
+    if (nuevoGasto.nombre === "") {
+      setMensajeError("Agrega nombre del gasto");
+      return;
+    } 
+    if (isNaN(nuevoGasto.monto) || montoActual.trim() === "") {
+      setMensajeError("Agrega la cantidad del gasto");
+      return;
+    }
 
     try {
+      // 🔹 POST al backend
       const response = await fetch("http://localhost:8080/api/gastos", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(nuevoGasto),
+        body: JSON.stringify(nuevoGasto)
       });
 
-      if (!response.ok) throw new Error("Error al guardar el gasto");
+      if (!response.ok) {
+        throw new Error("Error al guardar el gasto en la base de datos");
+      }
 
       const gastoGuardado = await response.json();
-      setGastos(prev => [...prev, gastoGuardado]);
 
-      setNombre("");
-      setMonto("");
+      // 🔹 Actualiza el estado local con el objeto que devuelve el backend
+      setGastos([...gastos, gastoGuardado]);
+
+      // 🔹 Limpia los inputs y mensajes
+      setGastoActual("");
+      setMontoActual("");
       setMensajeError("");
     } catch (error) {
       setMensajeError(error.message);
@@ -35,18 +64,37 @@ function FormularioGasto({ setGastos }) {
   };
 
   return (
-    <form onSubmit={manejarFormulario}>
-      {mensajeError && <p>{mensajeError}</p>}
-      <input type="text" value={nombre} onChange={e => setNombre(e.target.value)} placeholder="Gasto" />
-      <input type="text" value={monto} onChange={e => setMonto(e.target.value)} placeholder="Monto $" />
-      <select value={categoria} onChange={e => setCategoria(e.target.value)}>
-        <option value="Comida">Comida</option>
-        <option value="Transporte">Transporte</option>
-        <option value="Entretenimiento">Entretenimiento</option>
-        <option value="Otros">Otros</option>
-      </select>
-      <button type="submit">Agregar</button>
-    </form>
+    <>
+      <form id="formulario" onSubmit={manejarFormulario}>
+        <label htmlFor="">Información sobre los gastos</label>
+
+        {/* 🔹 Mensaje visual */}
+        {mensajeError && <p className="mensaje-error">{mensajeError}</p>}
+
+        <input
+          type="text"
+          value={gastoActual}
+          onChange={manejarGasto}
+          placeholder="Ingresa el gasto"
+        />
+        <input
+          type="text"
+          value={montoActual}
+          onChange={manejarMonto}
+          placeholder="Ingresa el monto $"
+        />
+        <div id="categoria">
+          <label>Categoria:</label>
+          <select value={categoria} onChange={manejarOpcion}>
+            <option value="Comida">Comida</option>
+            <option value="Transporte">Transporte</option>
+            <option value="Entretenimiento">Entretenimiento</option>
+            <option value="Otros">Otros</option>
+          </select>
+        </div>
+        <button id="buttonAdd" type="submit">Agregar</button>
+      </form>
+    </>
   );
 }
 

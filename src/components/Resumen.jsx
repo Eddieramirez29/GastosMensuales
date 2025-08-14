@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FaBus, FaEllipsisH, FaFilm, FaMoneyBillWave, FaUtensils } from "react-icons/fa";
 import "../styles/Resume.css";
 
-function Resumen({ gastos }) {
+function Resumen({ gastos, setGastos }) {
   const [totalGastos, setTotalGastos] = useState(0);
   const [totalComidaMonto, setTotalComidaMonto] = useState(0);
   const [totalEntretenimientoMonto, setTotalEntretenimientoMonto] = useState(0);
@@ -14,30 +14,36 @@ function Resumen({ gastos }) {
   const [gastosTransporte, setGastosTransporte] = useState([]);
   const [gastosOtros, setGastosOtros] = useState([]);
 
-  const mostrarTotal = () => {
-    if (gastos.length === 0) 
-    {
-      return;
-    } 
-    else 
-    {
-      const acumTotal =  gastos.reduce((suma, valor) => {
+  const mostrarTotal = async () => {
+    try {
+      // 🔹 GET al backend
+      const response = await fetch("http://localhost:8080/api/gastos");
+      if (!response.ok) {
+        throw new Error("Error al obtener los gastos");
+      }
+      const data = await response.json();
+      setGastos(data); // 🔹 Actualiza el estado principal con los datos del backend
+
+      if (data.length === 0) return;
+
+      // 🔹 Mantengo todos tus filtros y cálculos intactos
+      const acumTotal =  data.reduce((suma, valor) => {
         return suma + Number(valor.monto);
       }, 0);
 
-      const gastosComidaFiltrados = gastos.filter(
+      const gastosComidaFiltrados = data.filter(
         (valor) => valor.categoria === "Comida"
       );
 
-      const gastosEntretenimientoFiltrados = gastos.filter(
+      const gastosEntretenimientoFiltrados = data.filter(
         (valor) => valor.categoria === "Entretenimiento"
       );
 
-      const gastosTransporteFiltrados = gastos.filter(
+      const gastosTransporteFiltrados = data.filter(
         (valor) => valor.categoria === "Transporte"
       );
 
-      const gastosOtrosFiltrados = gastos.filter(
+      const gastosOtrosFiltrados = data.filter(
         (valor) => valor.categoria === "Otros"
       );
 
@@ -60,7 +66,9 @@ function Resumen({ gastos }) {
       const acumTotalTransporte = gastosTransporteFiltrados.reduce(
         (suma, valor) => {
           return suma + Number(valor.monto);
-        }, 0);
+        },
+        0
+      );
 
       const acumTotalOtros = gastosOtrosFiltrados.reduce((suma, valor) => {
         return suma + Number(valor.monto);
@@ -71,6 +79,9 @@ function Resumen({ gastos }) {
       setTotalEntretenimientoMonto(acumTotalEntretenimiento);
       setTotalTransporteMonto(acumTotalTransporte);
       setTotalOtrosMonto(acumTotalOtros);
+
+    } catch (error) {
+      console.error(error.message);
     }
   };
 
